@@ -7,21 +7,21 @@ RUN apt-get update && \
         tar xf libde265-1.0.3.tar.gz && \
         cd libde265-1.0.3 && \
         ./configure --disable-dependency-tracking --disable-silent-rules --disable-sherlock265 --disable-dec265 --prefix=/usr && \
-        make -j4 && \
+        make && \
         make install && \
         cd /tmp && \
         wget https://github.com/strukturag/libheif/releases/download/v1.3.2/libheif-1.3.2.tar.gz && \
         tar xf libheif-1.3.2.tar.gz && \
         cd libheif-1.3.2 && \
         ./configure --disable-dependency-tracking --disable-silent-rules --prefix=/usr && \
-        make -j4 && \
+        make && \
         make install && \
         cd /tmp && \
         wget https://dl.bintray.com/homebrew/mirror/imagemagick--7.0.8-12.tar.xz && \
         tar xf imagemagick--7.0.8-12.tar.xz && \
         cd ImageMagick-7.0.8-12 && \
         ./configure --disable-cipher --disable-openmp --without-magick-plus-plus --without-png --without-perl --prefix=/usr && \
-        make -j4 && \
+        make && \
         make install && \
         apt-get remove -y build-essential pkg-config libjpeg-dev wget software-properties-common && \
         apt-get autoremove -y && \
@@ -40,6 +40,6 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 RUN go get -u github.com/revel/cmd/revel github.com/revel/modules/static
 RUN go get github.com/bancek/koofr-heic/app #1
 RUN cd /go/src/github.com/bancek/koofr-heic/app; go get ./...
-RUN revel build github.com/bancek/koofr-heic /koofr-heic
+RUN cd /go && revel build github.com/bancek/koofr-heic /koofr-heic
 
 CMD /koofr-heic/run.sh
