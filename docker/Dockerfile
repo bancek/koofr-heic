@@ -38,7 +38,7 @@ ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 RUN go get -u github.com/revel/cmd/revel github.com/revel/modules/static
-RUN go get github.com/bancek/koofr-heic/app #1
+RUN go get github.com/bancek/koofr-heic/app #2
 RUN cd /go/src/github.com/bancek/koofr-heic/app; go get ./...
 RUN cd /go && revel build github.com/bancek/koofr-heic /koofr-heic
 
