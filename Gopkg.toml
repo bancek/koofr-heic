@@ -1,4 +1,4 @@
-required = ["github.com/revel/cmd"]
+required = ["github.com/revel/cmd", "github.com/revel/modules"]
 
 [[constraint]]
   branch = "master"
@@ -14,7 +14,7 @@ required = ["github.com/revel/cmd"]
 
 [[constraint]]
   name = "github.com/revel/modules"
-  version = "0.20.0"
+  version = "0.20.1"
 
 [[constraint]]
   name = "github.com/revel/revel"
@@ -27,3 +27,7 @@ required = ["github.com/revel/cmd"]
 [prune]
   go-tests = true
   unused-packages = true
+
+[[prune.project]]
+  name = "github.com/revel/modules"
+  unused-packages = false

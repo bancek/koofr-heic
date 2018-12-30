@@ -41,8 +41,8 @@ RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 RUN mkdir -p /go/src/github.com/bancek/koofr-heic
 COPY . /go/src/github.com/bancek/koofr-heic
-RUN cd /go/src/github.com/bancek/koofr-heic && dep ensure
-RUN cd /go/src/github.com/bancek/koofr-heic && go get github.com/revel/cmd/revel
+RUN cd /go/src/github.com/bancek/koofr-heic && dep ensure -vendor-only
+RUN go get github.com/revel/cmd/revel && cd /go/src/github.com/revel/cmd && git checkout v0.20.0 && go get github.com/revel/cmd/revel
 RUN cd /go && revel build github.com/bancek/koofr-heic /koofr-heic
 
 CMD /koofr-heic/run.sh
