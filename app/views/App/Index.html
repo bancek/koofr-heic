@@ -2,23 +2,38 @@
 {{template "header.html" .}}
 
 <div class="container" style="margin-top: 30px;">
-<h2>Koofr HEIC</h2>
+  <h2>Koofr HEIC</h2>
 
-{{if .me}}
-<h4>{{.me.name}}</h4>
+  {{if .me}}
+  <h4>{{.me.name}}</h4>
 
-<form class="form-inline" action="/App/Convert">
-  <div class="form-group">
-    <input type="text" name="mountId" class="form-control" placeholder="Koofr Mount ID" style="width: 400px">
-  </div>
-  <div class="form-group">
-    <input type="text" name="path" class="form-control" placeholder="Koofr path" style="width: 400px">
-  </div>
-  <button type="submit" class="btn btn-primary">Convert HEIC to JPG</button>
-</form>
-{{else}}
-<a href="{{.authUrl}}" class="btn btn-primary">Login with Koofr</a>
-{{end}}
+  <form action="/App/Convert">
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <input type="text" name="mountId" class="form-control w-100" placeholder="Koofr Mount ID">
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="path" class="form-control w-100" placeholder="Koofr path">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <input type="text" name="webUrl" class="form-control w-100" placeholder="or Koofr Web URL">
+      </div>
+      <div class="col-md-6">
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="checkbox" name="convertMov" id="convertMov">
+          <label class="form-check-label" for="convertMov">
+            Convert MOV to MP4
+          </label>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Convert HEIC to JPG</button>
+  </form>
+  {{else}}
+  <a href="{{.authUrl}}" class="btn btn-primary">Login with Koofr</a>
+  {{end}}
 </div>
 
 {{template "footer.html" .}}

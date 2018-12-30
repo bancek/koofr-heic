@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 RUN apt-get update && \
-        apt-get install -y build-essential pkg-config libjpeg-dev libjpeg-turbo8 wget curl git && \
+        apt-get install -y build-essential pkg-config libjpeg-dev libjpeg-turbo8 ffmpeg wget curl git && \
         cd /tmp && \
         wget https://github.com/strukturag/libde265/releases/download/v1.0.3/libde265-1.0.3.tar.gz && \
         tar xf libde265-1.0.3.tar.gz && \

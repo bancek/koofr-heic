@@ -3,6 +3,8 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"net/url"
+	"regexp"
 
 	"github.com/bancek/koofr-heic/app/models/koofrheictojpg"
 
@@ -48,9 +50,10 @@ func (c App) Auth(code string) revel.Result {
 }
 
 type ConvertResult struct {
-	mountId string
-	path    string
-	koofr   *koofrclient.KoofrClient
+	mountId         string
+	path            string
+	convertMovToMp4 bool
+	koofr           *koofrclient.KoofrClient
 }
 
 func (r *ConvertResult) Apply(req *revel.Request, resp *revel.Response) {
@@ -81,7 +84,7 @@ func (r *ConvertResult) Apply(req *revel.Request, resp *revel.Response) {
 		flusher.Flush()
 	}
 
-	err := koofrheictojpg.Convert(r.koofr, r.mountId, r.path, logger)
+	err := koofrheictojpg.Convert(r.koofr, r.mountId, r.path, r.convertMovToMp4, logger)
 
 	if err != nil {
 		revel.ERROR.Println(err)
@@ -93,12 +96,27 @@ func (r *ConvertResult) Apply(req *revel.Request, resp *revel.Response) {
 	return
 }
 
-func (c App) Convert(mountId string, path string) revel.Result {
+func (c App) Convert(mountId string, path string, webUrl string, convertMov string) revel.Result {
+	if webUrl != "" {
+		u, err := url.Parse(webUrl)
+		if err == nil {
+			result := regexp.MustCompile("^/app/storage/([^/]+)$").FindAllStringSubmatch(u.Path, -1)
+			if len(result) == 1 && len(result[0]) == 2 {
+				mountId = result[0][1]
+				path = u.Query().Get("path")
+			}
+		}
+	}
+	if mountId == "" || path == "" {
+		return c.RenderText("Missing mountId or path")
+	}
+	convertMovToMp4 := convertMov == "on"
 	if koofr, ok := c.koofr(); ok {
 		return &ConvertResult{
-			mountId: mountId,
-			path:    path,
-			koofr:   koofr,
+			mountId:         mountId,
+			path:            path,
+			koofr:           koofr,
+			convertMovToMp4: convertMovToMp4,
 		}
 	} else {
 		return c.Redirect(App.Index)

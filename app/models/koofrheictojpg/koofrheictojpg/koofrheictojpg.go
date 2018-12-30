@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/bancek/koofr-heic/app/models/koofrheictojpg"
-	"github.com/koofr/go-koofrclient"
+	koofrclient "github.com/koofr/go-koofrclient"
 )
 
 func main() {
@@ -19,12 +19,14 @@ func main() {
 	var password string
 	var mountId string
 	var path string
+	var convertMovToMp4 bool
 
 	flag.StringVar(&baseUrl, "baseUrl", "https://app.koofr.net", "Koofr base URL")
 	flag.StringVar(&email, "email", "", "Koofr email")
 	flag.StringVar(&password, "password", "", "Koofr password")
 	flag.StringVar(&mountId, "mountId", "", "Koofr mount id")
 	flag.StringVar(&path, "path", "", "Koofr path")
+	flag.BoolVar(&convertMovToMp4, "convertMovToMp4", false, "Convert MOV to MP4")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s\n", os.Args[0])
@@ -45,7 +47,7 @@ func main() {
 		log.Println(s)
 	}
 
-	err := koofrheictojpg.Convert(koofr, mountId, path, logger)
+	err := koofrheictojpg.Convert(koofr, mountId, path, convertMovToMp4, logger)
 	if err != nil {
 		log.Fatal(err)
 	}
