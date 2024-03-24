@@ -1,6 +1,7 @@
 package app
 
 import (
+	_ "github.com/revel/modules/static"
 	"github.com/revel/revel"
 )
 

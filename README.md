@@ -4,9 +4,8 @@ Convert HEIC to JPG on Koofr.
 
 ## Getting started
 
-```
-go get -u github.com/revel/cmd/revel
-go get github.com/revel/modules/static
+```sh
+go install github.com/revel/cmd/revel
 
 go get github.com/bancek/koofr-heic
 
@@ -22,7 +21,7 @@ Now go to http://localhost:9000/
 
 ## Deploy to Docker
 
-```
+```sh
 docker build -t koofr-heic .
 
 docker run -d -e KOOFR_CLIENT_ID="CLIENTID" -e KOOFR_CLIENT_SECRET="CLIENTSECRET" -e KOOFR_REDIRECT_URL="http://localhost:8000/App/Auth" -e APP_SECRET="APPSECRET" -p 8000:9000 koofr-heic

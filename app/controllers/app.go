@@ -10,6 +10,7 @@ import (
 
 	koofrclient "github.com/koofr/go-koofrclient"
 	"github.com/revel/revel"
+	"github.com/revel/revel/logger"
 	"golang.org/x/oauth2"
 
 	"github.com/bancek/koofr-heic/app/models"
@@ -26,7 +27,7 @@ func (c App) Index() revel.Result {
 		info, err := koofr.UserInfo()
 
 		if err != nil {
-			revel.ERROR.Println(err)
+			c.Log.Errorf("Error: %s", err.Error())
 		} else {
 			me["name"] = info.FirstName + " " + info.LastName
 		}
@@ -40,7 +41,7 @@ func (c App) Index() revel.Result {
 func (c App) Auth(code string) revel.Result {
 	token, err := models.KoofrOAuthConfig.Exchange(oauth2.NoContext, code)
 	if err != nil {
-		revel.ERROR.Println(err)
+		c.Log.Errorf("Error: %s", err.Error())
 		return c.Redirect(App.Index)
 	}
 
@@ -54,6 +55,7 @@ type ConvertResult struct {
 	path            string
 	convertMovToMp4 bool
 	koofr           *koofrclient.KoofrClient
+	logger          logger.MultiLogger
 }
 
 func (r *ConvertResult) Apply(req *revel.Request, resp *revel.Response) {
@@ -87,7 +89,7 @@ func (r *ConvertResult) Apply(req *revel.Request, resp *revel.Response) {
 	err := koofrheictojpg.Convert(r.koofr, r.mountId, r.path, r.convertMovToMp4, logger)
 
 	if err != nil {
-		revel.ERROR.Println(err)
+		r.logger.Errorf("Error: %s", err.Error())
 		return
 	}
 
@@ -117,6 +119,7 @@ func (c App) Convert(mountId string, path string, webUrl string, convertMov stri
 			path:            path,
 			koofr:           koofr,
 			convertMovToMp4: convertMovToMp4,
+			logger:          c.Log,
 		}
 	} else {
 		return c.Redirect(App.Index)
@@ -146,7 +149,7 @@ func (c App) koofr() (*koofrclient.KoofrClient, bool) {
 func setuser(c *revel.Controller) revel.Result {
 	var user *models.User
 	if _, ok := c.Session["uid"]; ok {
-		user = models.GetUser(c.Session["uid"])
+		user = models.GetUser(c.Session["uid"].(string))
 	}
 	if user == nil {
 		user = models.NewUser()
