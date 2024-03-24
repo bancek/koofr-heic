@@ -7,7 +7,7 @@ import (
 )
 
 func MovToMp4(movPath string, mp4Path string) (err error) {
-	cmd := exec.Command("ffmpeg", "-i", movPath, mp4Path)
+	cmd := exec.Command("ffmpeg", "-i", movPath, "-c:v", "h264", "-vf", "format=yuv420p", mp4Path)
 
 	stderr, err := cmd.StderrPipe()
 
